@@ -17,7 +17,7 @@ class FormProcessor{
 	* @param string $email the email address to send the form 
 	* results to.
 	**/
-	function FormProcessor($email){
+	function __construct($email){
 		$this->email= $email;
 	}
 	
@@ -51,21 +51,21 @@ class FormProcessor{
 	* "Thanks! Your message has been sent."
 	* @param $from is the from address for the email. Defaults to null
 	**/
-	function email($subject, $message, $msg='', $from=NULL){
-		if(mail($this->email, $subject, $message, "From: $from")){
+	function email( $subject, $message, $from=NULL, $msg='' ) {
+		if( mail( $this->email, $subject, $message, "From: $from" ) ) {
 		
-			if($msg != ''){ 
+			if( $msg != '' ) { 
 				$this->mess= $msg;
-			}else{
+			} else {
 				$this->mess= "Thanks! Your message has been sent.";
 			}
 		
-		}else{
+		} else {
 			$this->mess= "Uh Oh! There was a problem processing your message.";
 		}
 	
 	
-		print $this->mess;
+		return $this->mess;
 	}
 
 
@@ -75,13 +75,17 @@ class FormProcessor{
 	* @param $info is array from HTML form.
 	* @return $message a string produced from processing the array
 	**/
-	function build_message($info){
+	function build_message( $info ){
 		$message= "";
 		
-		foreach($info as $key => $value){
-			if(is_array($value)){ $value= $this->handle_checkboxes($value); }
-				$message.= "{$key}: ". $this->clean($value) ." \n"; 
+		foreach( $info as $key => $value ) {
+			if( is_array( $value ) ) { 
+				$value= $this->handle_checkboxes($value); 
 			}
+			
+			$message.= "{$key}: ". $this->clean($value) ." \n"; 
+			
+		}
 	
 		return $message;
 	}
